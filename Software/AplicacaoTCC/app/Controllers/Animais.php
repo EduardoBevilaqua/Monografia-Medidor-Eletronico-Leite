@@ -11,109 +11,153 @@ class Animais extends BaseController{
     }
     public function index(){
         
-        $data['titulo'] = 'Animais';
-        $data['msg'] = $this->session->getFlashdata('msg');
-
-        $medidasModel = new \App\Models\MedidasModel();
-        $animaisModel = new \App\Models\AnimaisModel();
-        $dados = $animaisModel->find();
-
-        foreach($dados as $dados){
-            $cont = 0;
-            $medidas = $medidasModel->where('Animais_id_Animal ',$dados->id_Animal)->find();
-            $qtdMedidas = count($medidas);
-            if($qtdMedidas == 0){
-                $qtdMedidas = 1;
-            }
+        if(isset($_SESSION['Logado'])){
+            $data['titulo'] = 'Animais';
+            $data['msg'] = $this->session->getFlashdata('msg');
+    
+            $medidasModel = new \App\Models\MedidasModel();
+            $animaisModel = new \App\Models\AnimaisModel();
+            $dados = $animaisModel->find();
+          
+            if(count($dados)>0){
+                foreach($dados as $dados){
+                    $cont = 0;
+                    $medidas = $medidasModel->where('Animais_id_Animal ',$dados->id_Animal)->find();
+                    $qtdMedidas = count($medidas);
+                    if($qtdMedidas == 0){
+                        $qtdMedidas = 1;
+                    }
+                    
+                    foreach($medidas as $medidas){
+                        $cont = ($medidas->quantidade) + $cont;
+                    }
+                    $dados->quantidadeTotal = $cont;
+                    $dados->quantidadeOrdenha = $cont / $qtdMedidas;
+                    $arrayDados[$dados->id_Animal] = $dados;
+                }
             
-            foreach($medidas as $medidas){
-                $cont = ($medidas->quantidade) + $cont;
+                $data['animais'] = $arrayDados;
             }
-            $dados->quantidadeTotal = $cont;
-            $dados->quantidadeOrdenha = $cont / $qtdMedidas;
-            $arrayDados[$dados->id_Animal] = $dados;
-         }
-        $data['animais'] = $arrayDados;
-        echo view('animais', $data);
+            else{
+                $data['animais'] = "";
+            }
+            echo view('animais', $data);
+        }
+        else{
+            return redirect()->to(base_url('public/Login'));
+        }
+       
     }
-    public function listaAnimais(){
+
+    /*public function listaAnimais(){
         $arrayDados = array();
         $animaisModel = new \App\Models\AnimaisModel();
         $dados = $animaisModel->find();
         foreach($dados as $dados){
             array_push($arrayDados, $dados->nome_animal); 
         }
+        
         $myJSON  = json_encode($arrayDados);
-         //print_r($arrayDados);
-         echo $myJSON;
-    }
-    public function inserir(){
+        
+        echo $myJSON;
+    }*/
+
+    public function listaAnimais(){
+        $arrayDados = array();
         $animaisModel = new \App\Models\AnimaisModel();
-        $data['titulo'] = 'Inserir Animal';
-        $data['acao'] = 'Cadastrar';
-        $data['msg'] = '';
-
-        if($this->request->getMethod() === 'post'){
-
-            $dadoscliente = $this->request->getPost();
-                   
-            if($animaisModel->insert($dadoscliente)){
-                $this->session->setFlashdata('msg', 'Animal cadastrado com sucesso!'); 
-                return redirect()->to(base_url('public/Animais'));
-            }
-            else{
-                $data['msg'] = 'Erro ao cadastrar Animal';
-                $data['erros'] =$animaisModel->errors();
-            }      
+        $dados = $animaisModel->find();
+        $cont = 0;
+        $vaca0 = "";
+        $vaca1 = "";
+        $vaca2 = "";
+        foreach($dados as $dados){
+            array_push($arrayDados, $dados->nome_animal); 
+            ${'vaca'.$cont} = $dados->nome_animal;
+            $cont++;
         }
-        echo view('animais_formulario', $data);
+        $vacas = "--".$vaca0."---".$vaca1."----".$vaca2."-----";
+        echo $vacas;
+    }
+
+    public function inserir(){
+        if(isset($_SESSION['Logado'])){
+            $animaisModel = new \App\Models\AnimaisModel();
+            $data['titulo'] = 'Inserir Animal';
+            $data['acao'] = 'Cadastrar';
+            $data['msg'] = '';
+
+            if($this->request->getMethod() === 'post'){
+
+                $dadoscliente = $this->request->getPost();
+                    
+                if($animaisModel->insert($dadoscliente)){
+                    $this->session->setFlashdata('msg', 'Animal cadastrado com sucesso!'); 
+                    return redirect()->to(base_url('public/Animais'));
+                }
+                else{
+                    $data['msg'] = 'Erro ao cadastrar Animal';
+                    $data['erros'] =$animaisModel->errors();
+                }      
+            }
+            echo view('animais_formulario', $data);
+        }
+        else{
+            return redirect()->to(base_url('public/Login'));
+        }
     }
 
     public function editar($id){
-
-        $data['titulo'] = 'Editar Cliente';
-        $data['acao'] = 'Editar';
-        $data['msg'] = '';
-        $data['erros'] = '';
-
-        $animaisModel = new \App\Models\AnimaisModel();
-        $animal = $animaisModel->find($id);
-
-        if(is_null($animal)){
-            $this->session->setFlashdata('msg', 'Animal não encontrado!');
-            return redirect()->to(base_url('public/Animais'));
-        }
-        else if($this->request->getMethod() === 'post'){
-            $dadosAnimal = $this->request->getPost();
-            if($animaisModel->update($id, $dadosAnimal)){
-                $this->session->setFlashdata('msg', 'Animal editado com sucesso!');
+        if(isset($_SESSION['Logado'])){
+            $data['titulo'] = 'Editar Cliente';
+            $data['acao'] = 'Editar';
+            $data['msg'] = '';
+            $data['erros'] = '';
+    
+            $animaisModel = new \App\Models\AnimaisModel();
+            $animal = $animaisModel->find($id);
+    
+            if(is_null($animal)){
+                $this->session->setFlashdata('msg', 'Animal não encontrado!');
                 return redirect()->to(base_url('public/Animais'));
             }
-            else{
-                $data['msg'] = 'Erro ao editar Animal!';
-            }   
-        }    
-        $data['animal'] = $animal;
-        echo view('animais_formulario', $data);
-        
+            else if($this->request->getMethod() === 'post'){
+                $dadosAnimal = $this->request->getPost();
+                if($animaisModel->update($id, $dadosAnimal)){
+                    $this->session->setFlashdata('msg', 'Animal editado com sucesso!');
+                    return redirect()->to(base_url('public/Animais'));
+                }
+                else{
+                    $data['msg'] = 'Erro ao editar Animal!';
+                }   
+            }    
+            $data['animal'] = $animal;
+            echo view('animais_formulario', $data);
+        }
+        else{
+            return redirect()->to(base_url('public/Login'));
+        }
     }
 
     public function excluir($id = null){
-        
-        $animaisModel = new \App\Models\AnimaisModel();
-        $animal = $animaisModel->find($id);
-
-        if(is_null($animal)){
-            $this->session->setFlashdata('msg', 'Animal não encontrado!');
+        if(isset($_SESSION['Logado'])){
+            $animaisModel = new \App\Models\AnimaisModel();
+            $animal = $animaisModel->find($id);
+    
+            if(is_null($animal)){
+                $this->session->setFlashdata('msg', 'Animal não encontrado!');
+                return redirect()->to(base_url('public/Animais'));
+            }
+            if($animaisModel->delete($id)){
+                $this->session->setFlashdata('msg', 'Animal excluido com sucesso');
+            }
+            else{
+                $this->session->setFlashdata('msg', 'Erro ao excluir Animal');
+            }
             return redirect()->to(base_url('public/Animais'));
         }
-        if($animaisModel->delete($id)){
-            $this->session->setFlashdata('msg', 'Animal excluido com sucesso');
-        }
         else{
-            $this->session->setFlashdata('msg', 'Erro ao excluir Animal');
+            return redirect()->to(base_url('public/Login'));
         }
-        return redirect()->to(base_url('public/Animais'));
     }
 }
 

@@ -15,21 +15,20 @@
 <body >
     
     <div class="container p-5" style="max-width: 450px">
-        <form class="text-center border border-light p-5" action="#!">
+        <form class="text-center border border-light p-5" method="post">
             <p class="h4 mb-4">Login</p>
-            <input type="email" id="defaultLoginFormEmail" class="form-control mb-4" placeholder="Usuario">
-            <input type="password" id="defaultLoginFormPassword" class="form-control mb-4" placeholder="Senha">
-
+            <input type="text" name="nome_usuario" class="form-control mb-4" placeholder="Usuario">
+            <input type="password" name="senha" class="form-control mb-4" placeholder="Senha">
+            <strong><?php echo $msg?></strong>
             <div class="d-flex justify-content-around">
                 <div>
                     <a href="">Esqueceu a senha?</a>
                 </div>
             </div>
-
             <button class="btn btn-info btn-block my-4" type="submit">Logar</button>
 
             <p>Não tem cadastro?
-                <a href="">Solicite Aqui</a>
+                <a href="<?php echo base_url('public/Login/cadastro')?>">Cadastre-se</a>
             </p>
 
         </form>

@@ -11,8 +11,12 @@ class Painel extends BaseController{
     }
     public function index(){
         $data['titulo'] = 'Painel';
-
-        echo view('painel', $data);
+        if(isset($_SESSION['Logado'])){
+            echo view('painel', $data);
+        }
+        else{
+            return redirect()->to(base_url('public/Login'));
+        }
     }
 }
 

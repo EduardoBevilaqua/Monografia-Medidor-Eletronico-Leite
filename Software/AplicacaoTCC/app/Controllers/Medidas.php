@@ -12,15 +12,18 @@ class Medidas extends BaseController{
     public function index(){
         
     }
-    public function inserir($chave,$idAnimal, $medida){
+    public function inserir($chave,$nome_animal, $medida){
         if($chave == "ABC123"){
             $animaisModel = new \App\Models\AnimaisModel();
-            $animal = $animaisModel->where('id_Animal',$idAnimal)->find();
+            $animal = $animaisModel->where('nome_animal',$nome_animal)->find();
             if(count($animal) != 0){
+                foreach($animal as $animal){
+                    $animal = $animal;
+                }
                 $medidasModel = new \App\Models\MedidasModel();
                 $medidasModel->set('data',date('Y-m-d H:i:s'));
                 $medidasModel->set('quantidade',$medida);
-                $medidasModel->set('Animais_id_Animal',$idAnimal);
+                $medidasModel->set('Animais_id_Animal',$animal->id_Animal);
                 
                 if($medidasModel->insert()){
                     echo "Medida registrada com sucesso";

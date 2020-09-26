@@ -28,8 +28,8 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right dropdown-default"
               aria-labelledby="navbarDropdownMenuLink-333">
-              <a class="dropdown-item" href="#"><i class="fas fa-user"></i> Minha Conta</a>
-              <a class="dropdown-item" href="finalizarSession.php"><i class="fas fa-sign-out-alt"></i> Sair</a>
+              <!--<a class="dropdown-item" href="#"><i class="fas fa-user"></i> Minha Conta</a>-->
+              <a class="dropdown-item" href="<?php echo base_url('public/Login/Desconectar')?>"><i class="fas fa-sign-out-alt"></i> Sair</a>
             </div>
           </li>
         </ul>

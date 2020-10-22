@@ -39,8 +39,8 @@
     <div class="card">
         <h3 class="card-header text-center font-weight-bold text-uppercase py-4">Animais</h3>
         <div class="card-body">
-        <span class="table-add float-right mb-3 mr-2"><a href="<?php echo base_url('public/Animais')?>" class="text-success"><i class="fas fa-redo cyan-text fa-2x"></i></a></span>
-        <span class="table-add float-right mb-3 mr-2"><a href="<?php echo base_url('public/Animais/inserir')?>" class="text-success"><i class="fas fa-plus fa-2x"></i></a></span>
+        <span class="table-add float-right mb-3 mr-2"><a href="<?php echo base_url('Animais')?>" class="text-success"><i class="fas fa-redo cyan-text fa-2x"></i></a></span>
+        <span class="table-add float-right mb-3 mr-2"><a href="<?php echo base_url('Animais/inserir')?>" class="text-success"><i class="fas fa-plus fa-2x"></i></a></span>
         <strong><?php echo $msg?></strong>
             <table class="table table-striped text-center">
                 <thead class="blue lighten-1"> 
@@ -64,10 +64,10 @@
                                     echo date('d/m/Y', $data); ?></td>
                         <td><?php echo $animais->quantidadeOrdenha?> Litros</td>
                         <td><?php echo $animais->quantidadeTotal?> Litros</td>
-                        <td class="pt-3-half" style="max-width: 90px"><a href="<?php echo base_url('public/Animais/editar/'.$animais->id_Animal)?>">
+                        <td class="pt-3-half" style="max-width: 90px"><a href="<?php echo base_url('Animais/editar/'.$animais->id_Animal)?>">
                                           <i class="fas fa-user-edit fa-1x cyan-text mx-1 my-1"></i>
                                         </a>
-                                        <a href="<?php echo base_url('public/Animais/excluir/'.$animais->id_Animal)?>">
+                                        <a href="<?php echo base_url('Animais/excluir/'.$animais->id_Animal)?>">
                                           <i class="fas fa-trash fa-1x red-text"></i>
                                         </a>  
                         </td>

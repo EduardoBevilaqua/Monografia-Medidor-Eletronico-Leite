@@ -1,16 +1,24 @@
-#include <HX711.h>
+//----- Bibliotecas ------//
+#include <HX711.h> //Biblioteca Celula de carga https://github.com/bogde/HX711
 #include <Arduino.h>
-#include <U8g2lib.h>
-#include <Adafruit_VL53L0X.h>
+#include <U8g2lib.h> //Biblioteca Display
+#include <Adafruit_VL53L0X.h> //Biblioteca Sensor de Distancia a Laser
 #include <SPI.h>
 #include <Wire.h>
-#include <MPU6050_tockn.h>
-#include <WiFi.h>
+#include <MPU6050_tockn.h> //Biblioteca Giroscopio
+#include <WiFi.h> //Biblioteca WiFi
+#include <EEPROM.h>
+//#include <SharpIR.h>
 
+//----- Difinição de Pinos -----//
+//Pinos da Balaça
+#define OUT_Balanca  13                      
+#define CLK_Balanca  14                        
 
 #define DT_PIN 13
 #define SCK_PIN 12
 
+//Botões
 #define botaoVoltar 15
 #define botaoCima 18
 #define botaoBaixo 4
@@ -22,28 +30,31 @@ Adafruit_VL53L0X lox = Adafruit_VL53L0X();
 #define MPU6050_ADDR 0x68
 MPU6050 mpu6050(Wire);
 
-IPAddress server(192,168,0,199); 
+//SharpIR SharpIR(13, 1080);
+
+HX711 balanca;          // define instancia balança HX711
+
+IPAddress server(172,20,161,101); 
 WiFiClient client;
 
+//----- Variaveis -----//
 float anguloX;
 float anguloY;
-
 String Texto;
-
 int offset = 0;
-
 unsigned long timeAtual;
 unsigned long timeAnterior;
 unsigned long intervalo;
 int controleInicializacao = 0, posMenu = 0,posMenu1 = 0,op = 10,menu = 10;
 int statusOrdenha;
 String vaca1,vaca2,vaca3;
-
 float laserInicio, pressaoInicio, cargaInicio;
 float laserFim, pressaoFim, cargaFim;
+float calibration_factor = 42130;     // fator de calibração para teste inicial
 
 HX711 scale;
 
+//----- Funções -----//
 
 void display();
 
@@ -77,101 +88,41 @@ void conectarWifi(){
     }
    }
 }
-
 void setup(void) {
   Serial.begin(115200);
   u8g2.begin(); 
   display("Iniciando Dispositivo!", 5, 35,"",0,0,"",0,0,"",0,0,"",0,0,"",0,0,"",0,0,"",0,0,"",0,0);
   Wire.begin();
   conectarWifi();
-  inicializaLaser();
+  
+  balanca.begin(OUT_Balanca, CLK_Balanca);      // inicializa a balança
+  balanca.set_scale();                                             // configura a escala da Balança
+  balanca.tare();                                                 // zera a Balança
+  balanca.set_scale(calibration_factor);                     // ajusta fator de calibração
+  
+  //inicializaLaser();
   inicializaGiroscopio();
-  receberAnimais();
+  //receberAnimais();
   
   //scale.begin(DT_PIN,SCK_PIN);
-  //offset = scale.read_average(3);
-}
-
-void receberAnimais(){
   
-  String readString;
-  Serial.println("--- Recebendo Lista de Animais ---");
-  String link = "GET /AplicacaoTCC/public/Animais/listaAnimais HTTP/1.1";
-  if(client.connect(server, 80)){
-    client.println("GET /AplicacaoTCC/public/Animais/listaAnimais HTTP/1.1"); 
-    client.println("Host: 192.168.0.199");
-    client.println("Connection: close");
-    client.println();
-  }
-  if(client){   
-    while(client.connected()){
-      while(client.available()){
-        char c = client.read();
-        readString += c;
-      }
-    }
-  }
-  readString.trim();
-  int lim1 = readString.indexOf("--");
-  int lim2 = readString.indexOf("---");
-  int lim3 = readString.indexOf("----");
-  int lim4 = readString.indexOf("-----");
-  vaca1 = readString.substring(lim1 + 2,lim2) + "\n";
-  vaca2 = readString.substring(lim2 + 3,lim3) + "\n";
-  vaca3 = readString.substring(lim3 + 4,lim4) + "\n";
-  client.stop();
-  readString = "";
+  //0offset = scale.read_average(3);
 }
 
-void enviarMedidas(String nome, float medida){
-  
-  String readString;
-  Serial.println("--- Recebendo Lista de Animais ---");
-  String link = "GET /AplicacaoTCC/public/Medidas/inserir/ABC123/" + nome + "/" + String(medida) + " HTTP/1.1";
-  if(client.connect(server, 80)){
-    client.println(link); 
-    client.println("Host: 192.168.0.199");
-    client.println("Connection: close");
-    client.println();
-  }
-  if(client){   
-    while(client.connected()){
-      while(client.available()){
-        char c = client.read();
-        readString += c;
-      }
-    }
-  }
-  readString.trim();
-  client.stop();
-  readString = "";
-}
-
-void display(String Texto1,int x1, int y1,String Texto2,int x2, int y2,String Texto3,int x3, int y3,String Texto4,int x4, int y4,String Texto5,int x5, int y5,String Texto6,int x6, int y6,String Texto7,int x7, int y7,String Texto8,int x8, int y8,String Texto9,int x9, int y9){
-   u8g2.firstPage();
-  do {
-    u8g2.setFont(u8g2_font_ncenB08_tr);
-    u8g2.drawStr(x1,y1, Texto1.c_str());
-    u8g2.drawStr(x2,y2, Texto2.c_str());
-    u8g2.drawStr(x3,y3, Texto3.c_str());
-    u8g2.drawStr(x4,y4, Texto4.c_str());
-    u8g2.drawStr(x5,y5, Texto5.c_str());
-    u8g2.drawStr(x6,y6, Texto6.c_str());
-    u8g2.drawStr(x7,y7, Texto7.c_str());
-    u8g2.drawStr(x8,y8, Texto8.c_str());
-    u8g2.drawStr(x9,y9, Texto9.c_str());
-  } while ( u8g2.nextPage() );
-}
-
-float dadosLaser(){
+/*float dadosLaser(){
   VL53L0X_RangingMeasurementData_t measure;
   lox.rangingTest(&measure, false); 
      
   return (measure.RangeMilliMeter);
+}*/
+
+float dadosLaser(){
+  //float distancia = SharpIR.getDistance();
+  //return distancia;
 }
 
 float dadosCelulaCarga(){
-  int kg = 0;
+  float kg = 0;
   kg     = scale.read_average(1) - offset;
   kg    /= 1000;
 
@@ -268,7 +219,7 @@ void menuPrincipal(){
       Menu2();
   }
   else if(menu == 1){
-      display("Peso = " + String(dadosCelulaCarga()) + "", 5, 10,"",5,20,"",0,0,"",0,0,"",0,0,"",0,0,"",0,0,"",0,0,"",0,0); 
+      calibraBalanca();
   }
   else if(menu == 2){
       display("Funcao brilho OFF!", 5, 35,"",0,0,"",0,0,"",0,0,"",0,0,"",0,0,"",0,0,"",0,0,"",0,0);

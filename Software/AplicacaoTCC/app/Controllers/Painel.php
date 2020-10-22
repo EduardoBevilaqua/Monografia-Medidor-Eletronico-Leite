@@ -15,7 +15,7 @@ class Painel extends BaseController{
             echo view('painel', $data);
         }
         else{
-            return redirect()->to(base_url('public/Login'));
+            return redirect()->to(base_url('Login'));
         }
     }
 }

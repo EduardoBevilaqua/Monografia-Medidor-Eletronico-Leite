@@ -28,7 +28,7 @@
             <button class="btn btn-info btn-block my-4" type="submit">Logar</button>
 
             <p>Não tem cadastro?
-                <a href="<?php echo base_url('public/Login/cadastro')?>">Cadastre-se</a>
+                <a href="<?php echo base_url('Login/cadastro')?>">Cadastre-se</a>
             </p>
 
         </form>

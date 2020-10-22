@@ -44,7 +44,7 @@ class Animais extends BaseController{
             echo view('animais', $data);
         }
         else{
-            return redirect()->to(base_url('public/Login'));
+            return redirect()->to(base_url('Login'));
         }
        
     }
@@ -92,7 +92,7 @@ class Animais extends BaseController{
                     
                 if($animaisModel->insert($dadoscliente)){
                     $this->session->setFlashdata('msg', 'Animal cadastrado com sucesso!'); 
-                    return redirect()->to(base_url('public/Animais'));
+                    return redirect()->to(base_url('Animais'));
                 }
                 else{
                     $data['msg'] = 'Erro ao cadastrar Animal';
@@ -102,7 +102,7 @@ class Animais extends BaseController{
             echo view('animais_formulario', $data);
         }
         else{
-            return redirect()->to(base_url('public/Login'));
+            return redirect()->to(base_url('Login'));
         }
     }
 
@@ -118,13 +118,13 @@ class Animais extends BaseController{
     
             if(is_null($animal)){
                 $this->session->setFlashdata('msg', 'Animal não encontrado!');
-                return redirect()->to(base_url('public/Animais'));
+                return redirect()->to(base_url('Animais'));
             }
             else if($this->request->getMethod() === 'post'){
                 $dadosAnimal = $this->request->getPost();
                 if($animaisModel->update($id, $dadosAnimal)){
                     $this->session->setFlashdata('msg', 'Animal editado com sucesso!');
-                    return redirect()->to(base_url('public/Animais'));
+                    return redirect()->to(base_url('Animais'));
                 }
                 else{
                     $data['msg'] = 'Erro ao editar Animal!';
@@ -134,7 +134,7 @@ class Animais extends BaseController{
             echo view('animais_formulario', $data);
         }
         else{
-            return redirect()->to(base_url('public/Login'));
+            return redirect()->to(base_url('Login'));
         }
     }
 
@@ -145,7 +145,7 @@ class Animais extends BaseController{
     
             if(is_null($animal)){
                 $this->session->setFlashdata('msg', 'Animal não encontrado!');
-                return redirect()->to(base_url('public/Animais'));
+                return redirect()->to(base_url('Animais'));
             }
             if($animaisModel->delete($id)){
                 $this->session->setFlashdata('msg', 'Animal excluido com sucesso');
@@ -153,10 +153,10 @@ class Animais extends BaseController{
             else{
                 $this->session->setFlashdata('msg', 'Erro ao excluir Animal');
             }
-            return redirect()->to(base_url('public/Animais'));
+            return redirect()->to(base_url('Animais'));
         }
         else{
-            return redirect()->to(base_url('public/Login'));
+            return redirect()->to(base_url('Login'));
         }
     }
 }

@@ -13,10 +13,10 @@
 
       <ul class="navbar-nav mx-auto">
         <li class="nav-item mr-1">
-          <a class="nav-link" href="<?php echo base_url('public/Painel')?>">Painel</a>
+          <a class="nav-link" href="<?php echo base_url('Painel')?>">Painel</a>
         </li>
         <li class="nav-item ml-1">
-          <a class="nav-link" href="<?php echo base_url('public/Animais')?>">Animais</a>
+          <a class="nav-link" href="<?php echo base_url('Animais')?>">Animais</a>
         </li>
       </ul>
 
@@ -29,7 +29,7 @@
             <div class="dropdown-menu dropdown-menu-right dropdown-default"
               aria-labelledby="navbarDropdownMenuLink-333">
               <!--<a class="dropdown-item" href="#"><i class="fas fa-user"></i> Minha Conta</a>-->
-              <a class="dropdown-item" href="<?php echo base_url('public/Login/Desconectar')?>"><i class="fas fa-sign-out-alt"></i> Sair</a>
+              <a class="dropdown-item" href="<?php echo base_url('Login/Desconectar')?>"><i class="fas fa-sign-out-alt"></i> Sair</a>
             </div>
           </li>
         </ul>

@@ -12,6 +12,7 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.css" integrity="sha512-SUJFImtiT87gVCOXl3aGC00zfDl6ggYAw5+oheJvRJ8KBXZrr/TMISSdVJ5bBarbQDRC2pR5Kto3xTR0kpZInA==" crossorigin="anonymous" />
 
+  <link href="<?php echo base_url('public/css/style.css')?>" type="text/css" rel="stylesheet">
   <title><?php echo $titulo?></title>
 </head> 
 <body>
@@ -21,8 +22,25 @@
     <div class = "d-flex justify-content-center" >
       <div class="row">
         <div class="card">
-          <h3 class="card-header text-center font-weight-bold text-uppercase py-4">Produção Diaria</h3>
+          <h3 class="card-header text-center font-weight-bold text-uppercase py-4">Produção Diaria <?php echo $_SESSION['nomeAnimalPainel']?> </h3>
           <div class="card-body" >
+            <div class="container" style="max-width: 400px;">
+              <form class="text-center mb-1" method="post" >
+              <div class="row">
+                  <div class="col px-1">
+                    <select name="idAnimal" style="height: 40px;" class="browser-default custom-select mb-4" >
+                        <option selected>Todas</option>
+                        <?php foreach ($listaAnimais as $idAnimal => $nome_animal): ?>
+                            <?php echo "<option value=\"$idAnimal\" >$nome_animal</option>"; ?>
+                        <?php endforeach; ?>
+                    </select>
+                  </div>
+                  <div class="col px-1">
+                    <button class="btn btn-info btn-block mb-4" style="height: 40px;" type="submit">Selecionar</button>
+                  </div>
+                  </div>
+              </form>
+            </div>
             <canvas style="width: 600px;" id="producaoDiaria"></canvas>
           </div>
         </div>
@@ -132,7 +150,7 @@
   }
   $('document').ready(function(){
     $.ajax({
-        type: "GET", 
+        type: "POST", 
         url: 'http://localhost/AplicacaoTCC/public/Medidas/obterQuantidadeAnimal',
         timeout: 3000,
         datatype: 'JSON',
@@ -151,7 +169,7 @@
       });
 
       $.ajax({
-        type: "GET", 
+        type: "POST", 
         url: 'http://localhost/AplicacaoTCC/public/Medidas/obterQuantidadeDiaria',
         timeout: 3000,
         datatype: 'JSON',
@@ -172,7 +190,7 @@
       });
 
       $.ajax({
-        type: "GET", 
+        type: "POST", 
         url: 'http://localhost/AplicacaoTCC/public/Medidas/obterQuantidadeMensal',
         timeout: 3000,
         datatype: 'JSON',

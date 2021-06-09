@@ -10,6 +10,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css" rel="stylesheet">
 
+  <link href="<?php echo base_url('public/css/style.css')?>" type="text/css" rel="stylesheet">
   <title><?php echo $titulo?></title>
 </head> 
 <body >
@@ -28,7 +29,7 @@
             <button class="btn btn-info btn-block my-4" type="submit">Logar</button>
 
             <p>Não tem cadastro?
-                <a href="<?php echo base_url('Login/cadastro')?>">Cadastre-se</a>
+                <a href="<?php echo base_url('public/Login/cadastro')?>">Cadastre-se</a>
             </p>
 
         </form>

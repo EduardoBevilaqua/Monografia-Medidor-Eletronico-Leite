@@ -12,6 +12,7 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.css" integrity="sha512-SUJFImtiT87gVCOXl3aGC00zfDl6ggYAw5+oheJvRJ8KBXZrr/TMISSdVJ5bBarbQDRC2pR5Kto3xTR0kpZInA==" crossorigin="anonymous" />
 
+  <link href="<?php echo base_url('public/css/style.css')?>" type="text/css" rel="stylesheet">
   <title><?php echo $titulo?></title>
 </head> 
 <body>
@@ -28,21 +29,21 @@
                 <div class="input-group-prepend">
                     <div class="input-group-text">@</div>
                 </div>
-                <input type="text" name="nome_animal" value="<?php echo (isset($animal) ? $animal->nome_animal : '') ?>" class="form-control py-0" id="inlineFormInputGroupUsername2" placeholder="Nome">
+                <input type="text" name="nome_animal" value="<?php echo (isset($animal) ? $animal['nome_animal'] : '') ?>" class="form-control py-0" id="inlineFormInputGroupUsername2" placeholder="Nome">
             </div>
 
             <div class="input-group mb-2 mr-sm-2">
                 <div class="input-group-prepend">
                     <div class="input-group-text">@</div>
                 </div>
-                <input type="text" name="raca" value="<?php echo (isset($animal) ? $animal->raca : '') ?>" class="form-control py-0" id="inlineFormInputGroupUsername2" placeholder="Raça">
+                <input type="text" name="raca" value="<?php echo (isset($animal) ? $animal['raca'] : '') ?>" class="form-control py-0" id="inlineFormInputGroupUsername2" placeholder="Raça">
             </div>
 
             <div class="input-group mb-2 mr-sm-2">
                 <div class="input-group-prepend">
                     <div class="input-group-text">@</div>
                 </div>
-                <input type="date" name="dataNascimento" value="<?php echo (isset($animal) ? $animal->dataNascimento : '') ?>" class="form-control py-0" id="inlineFormInputGroupUsername2" placeholder="Data Nascimento">
+                <input type="date" name="dataNascimento" value="<?php echo (isset($animal) ? $animal['dataNascimento'] : '') ?>" class="form-control py-0" id="inlineFormInputGroupUsername2" placeholder="Data Nascimento">
             </div>
             
             <button class="btn btn-primary btn-block  my-4" type="submit"><?php echo $acao ?></button>

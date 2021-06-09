@@ -6,15 +6,12 @@ void gravarEeprom(int value, int pos) {
    EEPROM.write(pos + 1, 0);
    byte hiByte = highByte(value);
    byte loByte = lowByte(value);
-   Serial.println(word(hiByte, loByte));
-
    EEPROM.write(pos, hiByte);
    EEPROM.commit();
    EEPROM.write(pos + 1, loByte);  
    EEPROM.commit(); 
    EEPROM.end();
 }
-
 int lerEeprom(int pos) {
    EEPROM.begin(1024);
    byte hiByte = EEPROM.read(pos);

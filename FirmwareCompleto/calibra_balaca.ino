@@ -1,19 +1,16 @@
 void calibraBalanca(){
   int mult = 0;
-  
   while(true){
-    balanca.set_scale(fatorCalibracao);                     // ajusta fator de calibração
+    balanca.set_scale(calibration_factor);              
     float litros = 0, peso = 0;
     for(int i=0;i<5;i++){
       peso = peso + balanca.get_units();
       delay(0.5);
-      Serial.println(String(i) + " " + String(peso));
     }
     peso = (peso / 5);
-    Serial.println(peso);
     litros = peso;
-    display("Peso: " + String(peso,3) + " KG" , 5, 10,"Litros: " + String(litros,3) + " Litros",5,25,"",70,10,"Fator: " + String(fatorCalibracao),5,40,"",5,40);
-    delay(100) ;                                               // atraso de 0,5 segundos
+    display("Peso: "+String(peso,3)+" KG" ,5,10,"Litros: "+String(litros,3)+" Litros",5,25,"",70,10,"Fator: " + String(calibration_factor),5,40,"",5,40);
+    delay(100) ;                                           
     
     if(digitalRead(botaoCima) == HIGH && digitalRead(botaoBaixo) == HIGH){
       if(mult == 0){
@@ -28,22 +25,22 @@ void calibraBalanca(){
     }
     else if(digitalRead(botaoCima) == HIGH){
       if(mult == 0){
-        fatorCalibracao += 100;
+        calibration_factor += 100;
       }
       else{
-        fatorCalibracao += 10;
+        calibration_factor += 10;
       }
     }
     else if(digitalRead(botaoBaixo) == HIGH){
       if(mult == 0){
-        fatorCalibracao -= 100;
+        calibration_factor -= 100;
       }
       else{
-        fatorCalibracao -= 10;
+        calibration_factor -= 10;
       }
     }
     else if(digitalRead(botaoOk) == HIGH){
-     gravarEeprom(fatorCalibracao, 10);
+     gravarEeprom(calibration_factor, 10);
     }
     else if(digitalRead(botaoVoltar) == HIGH){
       break;

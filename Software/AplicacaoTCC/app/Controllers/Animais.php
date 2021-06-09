@@ -22,29 +22,30 @@ class Animais extends BaseController{
             if(count($dados)>0){
                 foreach($dados as $dados){
                     $cont = 0;
-                    $medidas = $medidasModel->where('Animais_id_Animal ',$dados->id_Animal)->find();
+                    $medidas = $medidasModel->where('Animais_id_Animal ',$dados['id_animal'])->find();
                     $qtdMedidas = count($medidas);
                     if($qtdMedidas == 0){
                         $qtdMedidas = 1;
                     }
                     
                     foreach($medidas as $medidas){
-                        $cont = ($medidas->quantidade) + $cont;
+                        $cont = ($medidas['quantidade']) + $cont;
                     }
-                    $dados->quantidadeTotal = $cont;
-                    $dados->quantidadeOrdenha = $cont / $qtdMedidas;
-                    $arrayDados[$dados->id_Animal] = $dados;
+                    $dados['quantidadeTotal'] = $cont;
+                    $dados['quantidadeOrdenha'] = $cont / $qtdMedidas;
+                    $arrayDados[$dados['id_animal']] = $dados;
                 }
             
                 $data['animais'] = $arrayDados;
+                
             }
             else{
-                $data['animais'] = "";
+                $data['animais'] = $dados;
             }
             echo view('animais', $data);
         }
         else{
-            return redirect()->to(base_url('Login'));
+            return redirect()->to(base_url('public/Login'));
         }
        
     }
@@ -63,20 +64,33 @@ class Animais extends BaseController{
     }*/
 
     public function listaAnimais(){
-        $arrayDados = array();
-        $animaisModel = new \App\Models\AnimaisModel();
-        $dados = $animaisModel->find();
-        $cont = 0;
-        $vaca0 = "";
-        $vaca1 = "";
-        $vaca2 = "";
-        foreach($dados as $dados){
-            array_push($arrayDados, $dados->nome_animal); 
-            ${'vaca'.$cont} = $dados->nome_animal;
-            $cont++;
+        if($this->request->getMethod() === 'post'){
+
+            $dados = $this->request->getPost();
+            if($dados['chave'] == "ABC123"){
+                $arrayDados = array();
+                    
+                $animaisModel = new \App\Models\AnimaisModel();
+                
+                $Animais = $animaisModel->find();
+                //print_r($Animais);
+                $i=1;
+                foreach($Animais as $animais){
+                    $arrayDados['vaca'.$i] =  $animais['nome_animal']; 
+                    //$array = array("vaca" => $animais['nome_animal']);   
+                    //array_push($arrayDados, $array);
+                    $i++;
+                }
+                if(isset($arrayDados)){
+                    //print_r($arrayDados);
+                    $myJSON  = json_encode($arrayDados);
+                    echo $myJSON;
+                }
+            }
+            else{
+                echo "Chave Incorreta";
+            }
         }
-        $vacas = "--".$vaca0."---".$vaca1."----".$vaca2."-----";
-        echo $vacas;
     }
 
     public function inserir(){
@@ -92,7 +106,7 @@ class Animais extends BaseController{
                     
                 if($animaisModel->insert($dadoscliente)){
                     $this->session->setFlashdata('msg', 'Animal cadastrado com sucesso!'); 
-                    return redirect()->to(base_url('Animais'));
+                    return redirect()->to(base_url('public/Animais'));
                 }
                 else{
                     $data['msg'] = 'Erro ao cadastrar Animal';
@@ -102,7 +116,7 @@ class Animais extends BaseController{
             echo view('animais_formulario', $data);
         }
         else{
-            return redirect()->to(base_url('Login'));
+            return redirect()->to(base_url('public/Login'));
         }
     }
 
@@ -118,13 +132,13 @@ class Animais extends BaseController{
     
             if(is_null($animal)){
                 $this->session->setFlashdata('msg', 'Animal não encontrado!');
-                return redirect()->to(base_url('Animais'));
+                return redirect()->to(base_url('public/Animais'));
             }
             else if($this->request->getMethod() === 'post'){
                 $dadosAnimal = $this->request->getPost();
                 if($animaisModel->update($id, $dadosAnimal)){
                     $this->session->setFlashdata('msg', 'Animal editado com sucesso!');
-                    return redirect()->to(base_url('Animais'));
+                    return redirect()->to(base_url('public/Animais'));
                 }
                 else{
                     $data['msg'] = 'Erro ao editar Animal!';
@@ -134,7 +148,7 @@ class Animais extends BaseController{
             echo view('animais_formulario', $data);
         }
         else{
-            return redirect()->to(base_url('Login'));
+            return redirect()->to(base_url('public/Login'));
         }
     }
 
@@ -145,7 +159,7 @@ class Animais extends BaseController{
     
             if(is_null($animal)){
                 $this->session->setFlashdata('msg', 'Animal não encontrado!');
-                return redirect()->to(base_url('Animais'));
+                return redirect()->to(base_url('public/Animais'));
             }
             if($animaisModel->delete($id)){
                 $this->session->setFlashdata('msg', 'Animal excluido com sucesso');
@@ -153,10 +167,10 @@ class Animais extends BaseController{
             else{
                 $this->session->setFlashdata('msg', 'Erro ao excluir Animal');
             }
-            return redirect()->to(base_url('Animais'));
+            return redirect()->to(base_url('public/Animais'));
         }
         else{
-            return redirect()->to(base_url('Login'));
+            return redirect()->to(base_url('public/Login'));
         }
     }
 }

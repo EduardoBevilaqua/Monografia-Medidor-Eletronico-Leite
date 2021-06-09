@@ -4,10 +4,17 @@ use CodeIgniter\Model;
 
 class UsuariosModel extends Model {
     
-    protected $table = 'usuarios';
+    protected $table = 'Usuarios';
     protected $primaryKey = 'id_usuario';
     protected $allowedFields = ['nome_usuario','senha'];
-    protected $returnType = 'object';
+    protected $returnType = 'array';
+
+    protected $afterFind = ['protecaoXSS'];
+
+    protected function protecaoXSS($data){
+        $data = esc($data);
+        return $data;
+    }
 
 }
 ?>
